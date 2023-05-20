@@ -1,0 +1,15 @@
+> Dockerfile
+echo "FROM caddy:2.5.0-alpine" >> Dockerfile
+echo "COPY ./Caddyfile /etc/caddy/Caddyfile" >> Dockerfile
+echo "COPY ./index.html ./about.html /usr/src/pages" >> Dockerfile
+> Caddyfile
+echo ":80" >> Caddyfile
+
+echo "root * /usr/src/pages" >> Caddyfile
+echo "file_server" >> Caddyfile
+
+docker image build . -t miniep6:2.5.0-alpine
+docker container run --name miniep6-container -p 8080:80 -v ${PWD}/index.html:/etc/caddy/index.html -v ${PWD}/about.html:/etc/caddy/about.html -d miniep6:2.5.0-alpine
+docker container ls
+docker container stop miniep6-container 
+docker container rm miniep6-container
